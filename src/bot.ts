@@ -1,6 +1,8 @@
 import Mineflayer from 'mineflayer';
 import { sleep, getRandom } from "./utils.ts";
-import CONFIG from "../config.json" assert {type: 'json'};
+import { initAuth } from "./auth.ts";
+import { installProtocolFix } from "./protocolFix.ts";
+import CONFIG from "../config.json" with { type: 'json' };
 
 let loop: NodeJS.Timeout;
 let bot: Mineflayer.Bot;
@@ -20,11 +22,25 @@ const reconnect = async (): Promise<void> => {
 };
 
 const createBot = (): void => {
+	// 1.21.6+ dialog-system login fix: must run before any serializer for the
+	// negotiated version is built, so install it before createBot.
+	installProtocolFix();
+
 	bot = Mineflayer.createBot({
 		host: CONFIG.client.host,
 		port: +CONFIG.client.port,
 		username: CONFIG.client.username
 	} as const);
+
+	// AuthMe-style server login (command / gui / anvil / dialog / both).
+	const authConfig = (CONFIG as any).auth ?? {
+		enabled: false,
+		password: '',
+		mode: 'command',
+		debugWindows: false,
+		gui: { titleMatch: ['login', 'register', 'authme'], slotMap: {}, clickDelayMs: 500 },
+	};
+	initAuth(bot, authConfig);
 
 
 	bot.once('error', error => {

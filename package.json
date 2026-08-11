@@ -11,6 +11,8 @@
 	},
 
 	"dependencies": {
+		"minecraft-data": "^3.110.0",
+		"minecraft-protocol": "^1.66.1",
 		"mineflayer": "^4.20.0",
 		"tsx": "^4.7.1"
 	}
