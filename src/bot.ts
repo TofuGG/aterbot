@@ -52,6 +52,11 @@ const createBot = (): void => {
 	bot.once('end', () => void reconnect());
 
 	bot.once('spawn', () => {
+		if (!CONFIG.moveable) {
+			console.log('Movement disabled — bot will stay still.');
+			return;
+		}
+
 		const changePos = async (): Promise<void> => {
 			const lastAction = getRandom(CONFIG.action.commands) as Mineflayer.ControlState;
 			const halfChance: boolean = Math.random() < 0.5? true : false; // 50% chance to sprint

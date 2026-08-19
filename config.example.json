@@ -4,6 +4,7 @@
 		"port": "25565",
 		"username": "your-bot-username"
 	},
+	"moveable": false,
 
 	"! DO NOT EDIT BELOW !": "ONLY IF YOU KNOW WHAT YOU ARE DOING",
 	"logLevel": ["error", "log", "debug"],
