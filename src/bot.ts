@@ -1,4 +1,5 @@
 import Mineflayer from 'mineflayer';
+import { SocksProxyAgent } from 'socks-proxy-agent';
 import { sleep, getRandom } from "./utils.ts";
 import { initAuth } from "./auth.ts";
 import { installProtocolFix } from "./protocolFix.ts";
@@ -22,14 +23,35 @@ const reconnect = async (): Promise<void> => {
 };
 
 const createBot = (): void => {
+	const version: string | undefined =
+		CONFIG.client.version && CONFIG.client.version !== 'auto'
+			? CONFIG.client.version
+			: undefined;
+
 	// 1.21.6+ dialog-system login fix: must run before any serializer for the
 	// negotiated version is built, so install it before createBot.
-	installProtocolFix();
+	// Skip for pre-1.21 versions where it's not needed.
+	if (!version || version.startsWith('1.21')) {
+		installProtocolFix();
+	}
+
+	// Create proxy agent if proxy is enabled
+	const proxyConfig = (CONFIG as any).proxy;
+	const agent = proxyConfig?.enabled
+		? new SocksProxyAgent({
+				host: proxyConfig.ip,
+				port: +proxyConfig.port,
+				userId: proxyConfig.username || undefined,
+				password: proxyConfig.password || undefined,
+			})
+		: undefined;
 
 	bot = Mineflayer.createBot({
 		host: CONFIG.client.host,
 		port: +CONFIG.client.port,
-		username: CONFIG.client.username
+		username: CONFIG.client.username,
+		...(version ? { version } : {}),
+		...(agent ? { agent } : {}),
 	} as const);
 
 	// AuthMe-style server login (command / gui / anvil / dialog / both).

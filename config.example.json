@@ -2,7 +2,15 @@
 	"client": {
 		"host": "your-server.example.com",
 		"port": "25565",
-		"username": "your-bot-username"
+		"username": "your-bot-username",
+		"version": "auto"
+	},
+	"proxy": {
+		"enabled": false,
+		"ip": "127.0.0.1",
+		"port": 1080,
+		"username": "",
+		"password": ""
 	},
 	"moveable": false,
 

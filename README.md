@@ -8,6 +8,7 @@ No movement, no web server, no Replit/UptimeRobot dependency. Just a bot that si
 
 - Connects to any Minecraft server via mineflayer
 - AuthMe login support (command, GUI, anvil, dialog, or both)
+- SOCKS5 proxy support with authentication
 - Movement is toggleable — off by default
 - Auto-reconnects on disconnect
 - Supports 1.21.6+ dialog-system login
@@ -21,7 +22,15 @@ No movement, no web server, no Replit/UptimeRobot dependency. Just a bot that si
   "client": {
     "host": "your-server.example.com",
     "port": "25565",
-    "username": "your-bot-username"
+    "username": "your-bot-username",
+    "version": "auto"
+  },
+  "proxy": {
+    "enabled": false,
+    "ip": "127.0.0.1",
+    "port": 1080,
+    "username": "",
+    "password": ""
   },
   "moveable": false,
   "auth": {
@@ -51,6 +60,12 @@ pnpm start
 | `client.host` | string | Server IP or address |
 | `client.port` | string | Server port (default: 25565) |
 | `client.username` | string | Bot's Minecraft username |
+| `client.version` | string | Minecraft version (default: `auto`) |
+| `proxy.enabled` | boolean | Enable SOCKS5 proxy |
+| `proxy.ip` | string | Proxy server IP address |
+| `proxy.port` | number | Proxy server port |
+| `proxy.username` | string | Proxy authentication username (optional) |
+| `proxy.password` | string | Proxy authentication password (optional) |
 | `moveable` | boolean | `false` = bot stands still, `true` = random movement |
 | `auth.enabled` | boolean | Enable AuthMe login |
 | `auth.password` | string | Server password |
@@ -70,6 +85,7 @@ pm2 save
 - Removed forced bedrock room setup
 - Added toggleable movement (`moveable` config option)
 - Added AuthMe login support (command, GUI, anvil, dialog modes)
+- Added SOCKS5 proxy support with authentication
 - Added 1.21.6+ dialog-system protocol fix
 - Simplified README — no more 13-step Replit setup
 
